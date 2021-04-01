@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.espeo.sampleproject.controller.dto.PostDto;
 import pl.espeo.sampleproject.controller.dto.PostWithoutCommentsDto;
 import pl.espeo.sampleproject.model.Post;
 import pl.espeo.sampleproject.service.PostService;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,7 +26,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<List<PostWithoutCommentsDto>> getPosts(@RequestParam(required = false) Integer page, Sort.Direction sort,
-                                                 @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
+                                                                 @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
         int pageNumber = page != null && page >= 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
         return new ResponseEntity<>(PostDtoMapper.mapToPostDtos(postService.getPosts(pageNumber, sortDirection)), HttpStatus.OK);
@@ -44,6 +46,10 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity<Post> addPost(@Valid @RequestBody PostDto post) {
+        Post newPost = postService.addPost(post);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newPost.getId()).toUri();
+
+//        return ResponseEntity.created(location).build();
         return new ResponseEntity<>(postService.addPost(post), HttpStatus.CREATED);
     }
 
@@ -60,7 +66,6 @@ public class PostController {
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable long id) {
         postService.deletePost(id);
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,7 @@
-package pl.espeo.sampleproject.service;
+package pl.espeo.sampleproject.examples;
 
 public interface MyService {
 
     String someMethod();
 }
+

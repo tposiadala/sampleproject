@@ -1,4 +1,4 @@
-package pl.espeo.sampleproject.service;
+package pl.espeo.sampleproject.examples;
 
 import org.springframework.stereotype.Service;
 
@@ -7,6 +7,7 @@ public class CompositeMyServiceImpl implements MyService {
 
     @Override
     public String someMethod() {
-        return "Composite Service!!!";
+        return "Composite service message!!!";
     }
 }
+

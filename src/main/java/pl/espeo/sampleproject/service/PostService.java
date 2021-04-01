@@ -85,22 +85,19 @@ public class PostService {
     @CachePut(cacheNames = "SinglePost", key = "#result.id")
     public Post editOrCreatePost(PostDto postDto, long id) {
         List<Integer> list = new ArrayList<>();
-        Integer sum = list.stream().reduce(Integer::sum).orElseGet(() -> {
-            return 1;
-        });
-    return postRepository.findById(id)
-            .map(element -> {
-                element.setTitle(postDto.getTitle());
-                element.setContent(postDto.getContent());
-                return element; // hibernate dirty checking
-            })
-            .orElseGet(() -> {
-                Post newPost = new Post();
-                newPost.setTitle(postDto.getTitle());
-                newPost.setContent(postDto.getContent());
-                newPost.setCreated(LocalDateTime.now());
-                return postRepository.save(newPost);
-            });
+        return postRepository.findById(id)
+                .map(element -> {
+                    element.setTitle(postDto.getTitle());
+                    element.setContent(postDto.getContent());
+                    return element; // hibernate dirty checking
+                })
+                .orElseGet(() -> {
+                    Post newPost = new Post();
+                    newPost.setTitle(postDto.getTitle());
+                    newPost.setContent(postDto.getContent());
+                    newPost.setCreated(LocalDateTime.now());
+                    return postRepository.save(newPost);
+                });
     }
 
     @CacheEvict(cacheNames = "PostsWithComments")

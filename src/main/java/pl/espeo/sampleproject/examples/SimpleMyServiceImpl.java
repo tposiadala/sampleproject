@@ -1,4 +1,4 @@
-package pl.espeo.sampleproject.service;
+package pl.espeo.sampleproject.examples;
 
 import org.springframework.stereotype.Service;
 
@@ -7,6 +7,6 @@ public class SimpleMyServiceImpl implements MyService {
 
     @Override
     public String someMethod() {
-        return "Simple Service!!!";
+        return "Simple service message!!!";
     }
 }
